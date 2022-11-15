@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
-import ClientRow from "./ClientRow";
+import TeamMemberRow from "./TeamMemberRow";
 import Spinner from "./Spinner";
-import { GET_CLIENTS } from "../queries/clientQueries";
+import { GET_TEAMMEMBERS } from "../queries/teammemberQueries";
 
-export default function Clients() {
-  const { loading, error, data } = useQuery(GET_CLIENTS);
+export default function TeamMembers() {
+  const { loading, error, data } = useQuery(GET_TEAMMEMBERS);
 
   if (loading) return <Spinner />;
   if (error) return <p>Something Went Wrong</p>;
@@ -12,7 +12,7 @@ export default function Clients() {
   return (
     <>
       <h2>
-        <strong>Clients List</strong>
+        <strong>Team Members</strong>
       </h2>
       {!loading && !error && (
         <table className="table table-hover mt-3">
@@ -21,12 +21,13 @@ export default function Clients() {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
+              <th>Designation</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.clients.map((client) => (
-              <ClientRow key={client.id} client={client} />
+            {data.teammembers.map((teammember) => (
+              <TeamMemberRow key={teammember.id} teammember={teammember} />
             ))}
           </tbody>
         </table>

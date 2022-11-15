@@ -1,5 +1,6 @@
-const Project = require('../models/Project');
-const Client = require('../models/Client');
+const Project = require("../models/Project");
+const Client = require("../models/Client");
+const TeamMember = require("../models/TeamMember");
 
 const {
   GraphQLObjectType,
@@ -9,11 +10,11 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLEnumType,
-} = require('graphql');
+} = require("graphql");
 
 // Project Type
 const ProjectType = new GraphQLObjectType({
-  name: 'Project',
+  name: "Project",
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
@@ -25,12 +26,18 @@ const ProjectType = new GraphQLObjectType({
         return Client.findById(parent.clientId);
       },
     },
+    teammember: {
+      type: TeamMemberType,
+      resolve(parent, args) {
+        return TeamMember.findById(parent.teammemberId);
+      },
+    },
   }),
 });
 
 // Client Type
 const ClientType = new GraphQLObjectType({
-  name: 'Client',
+  name: "Client",
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
@@ -39,8 +46,20 @@ const ClientType = new GraphQLObjectType({
   }),
 });
 
+// TeamMemberType
+const TeamMemberType = new GraphQLObjectType({
+  name: "TeamMember",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    phone: { type: GraphQLString },
+    designation: { type: GraphQLString },
+  }),
+});
+
 const RootQuery = new GraphQLObjectType({
-  name: 'RootQueryType',
+  name: "RootQueryType",
   fields: {
     projects: {
       type: new GraphQLList(ProjectType),
@@ -68,12 +87,25 @@ const RootQuery = new GraphQLObjectType({
         return Client.findById(args.id);
       },
     },
+    teammembers: {
+      type: new GraphQLList(TeamMemberType),
+      resolve(parent, args) {
+        return TeamMember.find();
+      },
+    },
+    teammember: {
+      type: TeamMemberType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return TeamMember.findById(args.id);
+      },
+    },
   },
 });
 
 // Mutations
 const mutation = new GraphQLObjectType({
-  name: 'Mutation',
+  name: "Mutation",
   fields: {
     // Add a client
     addClient: {
@@ -109,6 +141,44 @@ const mutation = new GraphQLObjectType({
         return Client.findByIdAndRemove(args.id);
       },
     },
+
+    // Add a team member
+    addTeamMember: {
+      type: TeamMemberType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLNonNull(GraphQLString) },
+        phone: { type: GraphQLNonNull(GraphQLString) },
+        designation: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        const teammember = new TeamMember({
+          name: args.name,
+          email: args.email,
+          phone: args.phone,
+          designation: args.designation,
+        });
+
+        return teammember.save();
+      },
+    },
+    // Delete a team member
+    deleteTeamMember: {
+      type: TeamMemberType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        Project.find({ teammemberId: args.id }).then((projects) => {
+          projects.forEach((project) => {
+            project.remove();
+          });
+        });
+
+        return TeamMember.findByIdAndRemove(args.id);
+      },
+    },
+
     // Add a project
     addProject: {
       type: ProjectType,
@@ -117,16 +187,17 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLNonNull(GraphQLString) },
         status: {
           type: new GraphQLEnumType({
-            name: 'ProjectStatus',
+            name: "ProjectStatus",
             values: {
-              new: { value: 'Not Started' },
-              progress: { value: 'In Progress' },
-              completed: { value: 'Completed' },
+              new: { value: "Not Started" },
+              progress: { value: "In Progress" },
+              completed: { value: "Completed" },
             },
           }),
-          defaultValue: 'Not Started',
+          defaultValue: "Not Started",
         },
         clientId: { type: GraphQLNonNull(GraphQLID) },
+        teammemberId: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
         const project = new Project({
@@ -134,6 +205,7 @@ const mutation = new GraphQLObjectType({
           description: args.description,
           status: args.status,
           clientId: args.clientId,
+          teammemberId: args.teammemberId,
         });
 
         return project.save();
@@ -158,11 +230,11 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
         status: {
           type: new GraphQLEnumType({
-            name: 'ProjectStatusUpdate',
+            name: "ProjectStatusUpdate",
             values: {
-              new: { value: 'Not Started' },
-              progress: { value: 'In Progress' },
-              completed: { value: 'Completed' },
+              new: { value: "Not Started" },
+              progress: { value: "In Progress" },
+              completed: { value: "Completed" },
             },
           }),
         },

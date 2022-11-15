@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const GET_PROJECTS = gql`
   query getProjects {
@@ -22,6 +22,13 @@ const GET_PROJECT = gql`
         name
         email
         phone
+      }
+      teammember {
+        id
+        name
+        email
+        phone
+        designation
       }
     }
   }
