@@ -11,7 +11,7 @@ export default function Footer() {
         >
           <div className="d-flex">
             <img src={aglogo} alt="logo" className="mr-2" />
-            <div>Contact us </div>
+            <div>Contact us</div>
           </div>
         </a>
       </div>
