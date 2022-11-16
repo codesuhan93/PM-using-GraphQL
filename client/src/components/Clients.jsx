@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import ClientRow from "./ClientRow";
 import Spinner from "./Spinner";
 import { GET_CLIENTS } from "../queries/clientQueries";
+import AddClientModal from "../components/AddClientModal";
 
 export default function Clients() {
   const { loading, error, data } = useQuery(GET_CLIENTS);
@@ -11,9 +12,10 @@ export default function Clients() {
 
   return (
     <>
-      <h2>
-        <strong>Clients List</strong>
-      </h2>
+      <div className="d-flex justify-content-between">
+        <h2>Clients</h2>
+        <AddClientModal />
+      </div>
       {!loading && !error && (
         <table className="table table-hover mt-3">
           <thead>

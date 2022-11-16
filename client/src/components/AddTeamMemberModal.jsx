@@ -47,7 +47,7 @@ export default function AddTeamMemberModal() {
       >
         <div className="d-flex align-items-center">
           <FaUser className="icon" />
-          <div>Add Team Member</div>
+          <div>Add Member</div>
         </div>
       </button>
 

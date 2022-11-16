@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <>
       <div className="d-flex gap-3 mb-4">
-        <AddClientModal />
-        <AddTeamMemberModal />
-        <AddProjectModal />
+        {/* <AddClientModal /> */}
+        {/* <AddTeamMemberModal /> */}
+        {/* <AddProjectModal /> */}
       </div>
       <Projects />
       <hr />

@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import TeamMemberRow from "./TeamMemberRow";
 import Spinner from "./Spinner";
 import { GET_TEAMMEMBERS } from "../queries/teammemberQueries";
+import AddTeamMemberModal from "../components/AddTeamMemberModal";
 
 export default function TeamMembers() {
   const { loading, error, data } = useQuery(GET_TEAMMEMBERS);
@@ -11,9 +12,10 @@ export default function TeamMembers() {
 
   return (
     <>
-      <h2>
-        <strong>Team Members</strong>
-      </h2>
+      <div className="d-flex justify-content-between">
+        <h2>Team</h2>
+        <AddTeamMemberModal />
+      </div>
       {!loading && !error && (
         <table className="table table-hover mt-3">
           <thead>
