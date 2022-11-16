@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-// require('dotenv').config({ path: 'MONGO_URI' });
+// require("dotenv").config();
+
+// console.log("mongoURI::", process.env.PORT);
 
 const MONGO_URI =
   "mongodb+srv://hanan:hanan123@cluster0.g3pkotv.mongodb.net/?retryWrites=true&w=majority";
