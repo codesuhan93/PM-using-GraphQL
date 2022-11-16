@@ -12,6 +12,7 @@ export default function Home() {
         {/* <AddClientModal /> */}
         {/* <AddTeamMemberModal /> */}
         {/* <AddProjectModal /> */}
+        {/* {check} */}
       </div>
       <Projects />
       <hr />
